@@ -1,9 +1,12 @@
 import yargs from 'yargs'
 import express from 'express'
 import bodyParser from 'body-parser'
-import reserves from '../src/routes/reserves'
+import AaveContract from '../src/ethereum/aave'
+import EventsModel from '../src/model/events'
+import {connect, getMongo} from '../src/db/mongo'
+import ReservesRoute from '../src/routes/reserves'
 
-const contractAdresses = require('../resources/address.json')
+const contractAdresses = require('../src/resources/address.json')
 
 const { argv } = yargs
     .usage('Usage $0 [options]')
@@ -12,11 +15,27 @@ const { argv } = yargs
     .demandOption(['network'])
 
 const app = express()
-const port = process.env.PORT || 8005
 
-app.use(bodyParser.json())
-app.router.get('/', reservesList)
-router.get('/deposit/:slug', reserves)
-router.get('/deposit/:slug/:rate', reserves)
-router.get('/borrow/:slug', reserves)
-router.get('/borrow/:slug/:rate', reserves)
+const port = process.env.PORT || 8005
+const contractAddress = contractAdresses[argv.network].LendingPool
+
+async function initialize(){
+    await connect()
+    const contract = new AaveContract(argv.network, contractAddress)
+    await contract.initReserves()
+    const model = new EventsModel(getMongo())
+    // adds contract events listener
+    await contract.listen(model.storeEvents)
+    const reservesRoute = new ReservesRoute(model, contract)
+
+    app.use(bodyParser.json())
+    app.get('/', reservesRoute.reservesList)
+    app.get('/deposit/:slug', reservesRoute.reserves)
+    app.get('/deposit/:slug/:rate', reservesRoute.reserves)
+    app.get('/borrow/:slug', reservesRoute.reserves)
+    app.get('/borrow/:slug/:rate', reservesRoute.reserves)  
+}
+
+initialize()
+.then(() => app.listen(port, () => console.log(`listening on port ${port}!`)))
+

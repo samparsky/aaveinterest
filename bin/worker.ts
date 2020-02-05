@@ -1,9 +1,10 @@
 import yargs from 'yargs'
 import AaveContract from '../src/ethereum/aave'
 import EventsModel from '../src/model/events'
-import MongoHelper from '../src/db/mongo'
+import {connect, getMongo} from '../src/db/mongo'
 
-const contractAdresses = require('../resources/address.json')
+const contractAdresses = require('../src/resources/address.json')
+
 const { argv } = yargs
     .usage('Usage $0 [options]')
     .describe('network', 'the network to connect to ropsten or mainnet')
@@ -14,13 +15,12 @@ const contractAddress = contractAdresses[argv.network].LendingPool
 
 async function initialize(){
     // connect to mongodb database
-    MongoHelper.connect();
-
-    let mongo = new MongoHelper()
+    await connect();
     let contract = new AaveContract(argv.network, contractAddress)
-    let model = new EventsModel(mongo)
+    let model = new EventsModel(getMongo())
 
-    contract.listen(model.storeEvents)
+    await contract.listen(model.storeEvents)
+    console.log("finishsed")
 }
 
 

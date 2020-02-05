@@ -1,30 +1,31 @@
-import MongoHelper from '../db/mongo'
+import { getMongo } from '../db/mongo'
 import * as mongo from 'mongodb'
+import { ethers } from 'ethers'
+import BigNumber from 'bignumber.js'
+
 
 export default class EventsModel {
-    db: MongoHelper;
     collection: mongo.Collection
 
-    constructor(db: MongoHelper) {
-        this.db = db
-        this.collection = db.getMongo().collection('events')
+    constructor(db: mongo.Db) {
+        this.collection = db.collection('events')
     }
 
-    public async storeEvents({
+    storeEvents = async ({
         reserve,
         liquidityRate, 
         stableBorrowRate, 
         variableBorrowRate,
         liquidityIndex,
         variableBorrowIndex
-    }: any) : Promise<any> {
+    } : any) : Promise<any> => {
         const event = {
             reserve,
-            liquidityRate: +liquidityRate,
-            stableBorrowRate: +stableBorrowRate,
-            variableBorrowRate: +variableBorrowRate,
-            variableBorrowIndex,
-            liquidityIndex,
+            liquidityRate: new BigNumber(liquidityRate.toString()).div(new BigNumber(10).pow(27)).multipliedBy(100).toNumber(),
+            stableBorrowRate: new BigNumber(stableBorrowRate.toString()).div(new BigNumber(10).pow(27)).multipliedBy(100).toNumber(),
+            variableBorrowRate: new BigNumber(variableBorrowRate.toString()).div(new BigNumber(10).pow(27)).multipliedBy(100).toNumber(),
+            variableBorrowIndex: variableBorrowIndex.toString(),
+            liquidityIndex: liquidityIndex.toString(),
             created: new Date().toISOString()
         }
     
@@ -33,9 +34,14 @@ export default class EventsModel {
        return result
     }
 
-    public async aggregateReserves(pipeline: Array<object>) : Promise<any>{
-        return await this.collection
-            .aggregate(pipeline, { maxTimeMS: 10000 })
+    aggregateReserves = async (pipeline: Array<object>) : Promise<any> => {
+        console.log(JSON.stringify(pipeline))
+        let db = getMongo()
+        const data = await db.collection('events')
+            .aggregate([...pipeline])
             .toArray()
+        
+        console.log(data)
+        return data
     }
 }

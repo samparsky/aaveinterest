@@ -1,0 +1,8 @@
+{
+    "ropsten": {
+        "LendingPool": "0x4295Ee704716950A4dE7438086d6f0FBC0BA9472"
+    },
+    "mainnet": {
+        "LendingPool": "0x3dfd23A6c5E8BbcFc9581d2E864a68feb6a076d3"
+    }
+}
