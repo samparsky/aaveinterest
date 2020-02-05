@@ -12,7 +12,7 @@ export default class Reserves {
 
     reservesList = async (req: express.Request, res: express.Response) => {
         const reserves = await this.aaveContract.getReserves();
-        res.send({ reserves }) 
+        res.send(reserves) 
     }
     
     isDepositRoute(req: express.Request) : boolean {
@@ -24,7 +24,7 @@ export default class Reserves {
         let query = { }
         let projection = null
         let timeframe = null
-        const borrowTypes = ['fixed', 'stable']
+        const borrowTypes = ['variable', 'stable']
 
         if(req.query.borrowRate && !borrowTypes.includes(req.query.borrowRate)) {
             return res.send({"error": `invalid borrow rate, accepted types include ${borrowTypes.join(' ,')}` })

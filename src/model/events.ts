@@ -83,7 +83,6 @@ export default class EventsModel {
     }
 
     aggregateReserves = async (query: any, projection: any, rate: string, timeframe: any) : Promise<any> => {
-        
         let pipeline: any = [
             { '$match': query },
         ]
@@ -116,15 +115,8 @@ export default class EventsModel {
         }
     
         console.log({ pipeline })
-
-
-
-
-
-
-
         console.log(JSON.stringify(pipeline))
-        let db = getMongo()
+
         const data = await this.collection
             .aggregate([...pipeline])
             .toArray()
