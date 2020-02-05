@@ -4,13 +4,12 @@ const dbName = process.env.DB_MONGO_NAME || 'adexValidator'
 
 let client : mongo.MongoClient;
  
-export async function connect() {
+export async function connect(): Promise<void> {
     const url = process.env.DB_MONGO_URL || 'mongodb://localhost:27017'
     client = await mongo.MongoClient.connect(url, {useNewUrlParser: true})
-    return client 
 }
 
-export function getMongo() {
+export function getMongo() : mongo.Db {
     if (client) return client.db(dbName)
     throw new Error('db.connect() needs to be invoked before using getMongo()')
 }
