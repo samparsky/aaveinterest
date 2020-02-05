@@ -1,26 +1,36 @@
-
+import EventsModel from '../model/events'
+import AaveContract from '../ethereum/aave'
+import express from 'express'
 export default class Reserves {
-    public async reservesList(req, res, next) {
-        const reserves = await contract.getReserves();
+    eventsModel: EventsModel
+    aaveContract: AaveContract
+
+    constructor(eventsModel: EventsModel, aaveContract: AaveContract) {
+        this.eventsModel =  eventsModel
+        this.aaveContract = aaveContract
+    }
+
+    public async reservesList(req: express.Request, res: express.Response) {
+        const reserves = await this.aaveContract.getReserves();
         res.send({ reserves }) 
     }
     
-    function isDepositRoute(req){
-        req.originalUrl.split('/')[0] === 'deposit'
+    isDepositRoute(req: express.Request) : boolean {
+        return req.originalUrl.split('/')[0] === 'deposit'
     }
     
-    async function reserves (req, res, next) {
+    async reserves (req: express.Request, res: express.Response) {
         let query = { }
         let timeframe = null
     
         if(req.params.slug) query = { reserve: req.params.slug }
         if(req.params.rate) {
-            timeframe = getTimeframe(req.params.rate)
+            timeframe = this.getTimeframe(req.params.rate)
             if (timeframe.period) {
-                query = { ...query, created: { $gt: new Date(Date.now() - period) }}
+                query = { ...query, created: { $gt: new Date(Date.now() - timeframe.period) }}
             }
         } else {
-            query = { ...query, created: { $gt: get24hours() } }
+            query = { ...query, created: { $gt: this.get24hours() } }
         }
         
         if(req.query.borrowRate) {
@@ -30,7 +40,7 @@ export default class Reserves {
             }
         }
     
-        let pipeline = [
+        let pipeline: any = [
             { '$match': query },
         ]
     
@@ -42,7 +52,7 @@ export default class Reserves {
                         _$id: {
                             $subtract: [{ $toLong: '$created' }, { $mod: [{ $toLong: '$created' }, timeframe.interval] }]
                         },
-                        value: { $sum: isDepositRoute() ? '$liquityRate' : req.query.borrowRate ? `${req.query.borrowRate}BorrowRate` : '$stableBorrowRate' }
+                        value: { $sum: this.isDepositRoute(req) ? '$liquityRate' : req.query.borrowRate ? `${req.query.borrowRate}BorrowRate` : '$stableBorrowRate' }
                     }
                 },
                 { $limit: 100 },
@@ -50,17 +60,14 @@ export default class Reserves {
             ]
         }
     
-        const eventsCol = db.getMongo().collection('events')
-        const data = await eventsCol
-            .aggregate(pipeline, { maxTimeMS: 10000 })
-            .toArray()
         
+        const data = await this.eventsModel.aggregateReserves(pipeline)
         console.log({ data })
-    
+        
         res.send({ data })        
     }
     
-    function getTimeframe (rate) {
+    getTimeframe (rate: string) : any {
         const MINUTE = 60 * 1000
         const HOUR = 60 * MINUTE
         const DAY = 24 * HOUR
@@ -76,7 +83,7 @@ export default class Reserves {
     
     }
     
-    function get24hours(){
+    get24hours() : Date {
         return new Date(new Date().getTime() - (24*3600*1000))
     }
 }
