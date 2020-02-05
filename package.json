@@ -1,0 +1,36 @@
+{
+  "name": "aaveinterest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "yargs": "^15.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.2",
+    "@types/node": "^13.7.0",
+    "@types/yargs": "^15.0.3",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "typescript": "^3.7.5"
+  },
+  "scripts": {
+    "build": "npx tsc",
+    "prestart": "npm run build",
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samparsky/aaveinterest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samparsky/aaveinterest/issues"
+  },
+  "homepage": "https://github.com/samparsky/aaveinterest#readme"
+}
