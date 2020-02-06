@@ -1,8 +1,9 @@
 import lendingPoolAbi from '../../aave-protocol/abi/LendingPoolCore.json'
 import { ethers } from "ethers"
+import { ReservesList } from '../types'
 export default class AaveContract {
     lendingPoolContract: ethers.Contract
-    reservesList = { data: {}, updatedAt: new Date() }
+    reservesList: ReservesList = { data: [], updatedAt: new Date() }
 
     constructor(network: string, contractAddress: string){
         const infuraProvider = new ethers.providers.InfuraProvider(network);
@@ -15,7 +16,7 @@ export default class AaveContract {
         this.reservesList = { data, updatedAt: new Date() }
     }
 
-    async getReserves() : Promise<object> {
+    async getReserves() : Promise<ReservesList> {
         if(!this.lendingPoolContract) throw new Error("please initialize network")
         if(!this.reservesList.data) throw new Error("please initialize reserves")
         if((this.reservesList.updatedAt.getTime() - (new Date().getTime())) / 3600*1000 > 1 ) {

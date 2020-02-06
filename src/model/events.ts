@@ -1,8 +1,6 @@
-import { getMongo } from '../db/mongo'
 import * as mongo from 'mongodb'
-import { ethers } from 'ethers'
 import BigNumber from 'bignumber.js'
-
+import { ReserveEvent } from '../types'
 
 export default class EventsModel {
     collection: mongo.Collection
@@ -29,7 +27,7 @@ export default class EventsModel {
         variableBorrowRate,
         liquidityIndex,
         variableBorrowIndex
-    } : any) : Promise<any> => {
+    } : ReserveEvent) : Promise<any> => {
 
         const event = {
             reserve,
@@ -60,26 +58,6 @@ export default class EventsModel {
        const result = await this.collection.insertOne(event)
        console.log({ result })
        return result
-    }
-
-    getTimeframe (rate: string) : any {
-        const MINUTE = 60 * 1000
-        const HOUR = 60 * MINUTE
-        const DAY = 24 * HOUR
-    
-        if(rate == "week") {
-            return { period: 7 * DAY, interval: 6 * HOUR }
-        } else if (rate == "month") {
-            return { period: 30 * DAY, interval: 12 * HOUR }
-        } else if (rate == "all-time") {
-            // returns 
-            return { period: 0, interval: 56 * HOUR }
-        }
-    
-    }
-    
-    get24hours() : Date {
-        return new Date(new Date().getTime() - (24*3600*1000))
     }
 
     aggregateReserves = async (query: any, projection: any, rate: string, timeframe: any) : Promise<any> => {
