@@ -26,7 +26,7 @@ async function initialize(){
     await contract.initReserves()
     const model = new EventsModel(getMongo())
     // adds contract events listener
-    await contract.listen(model.storeEvents)
+    // await contract.listen(model.storeEvents)
     const reservesRoute = new ReservesRoute(model, contract)
 
     app.use(bodyParser.json())

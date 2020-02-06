@@ -26,6 +26,6 @@ async function initialize(){
 
 initialize()
 .then(function(){
-    logger('woker').info("exiting worker")
-    process.exit(0)
+    logger('woker').info("starting worker")
+    process.stdin.resume() // this is to prevent the script from exiting
 })
