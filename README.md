@@ -17,23 +17,32 @@ There are two services:
 
 - Worker  (listens to the ethereum network for events)
 
-**Manually** 
+**Manual** 
 
-Start http service
+**Start Http Server**
+
+It can connect to either the `mainnet` or `ropsten` ethereum network
 
 ```sh
 $ npm run build
-$ node ./dist/bin/http.js --network=mainnet
+$ npm start -- --network=mainnet
 ```
 
-Start worker service
+**Start Worker Service**
+
+It listens to the ethereum network for `ReserveUpdated` Aave events and stores in the database
+
+It can listen to either the `mainnet` or `ropsten` ethereum network
 
 ```sh
 $ npm run build
-$ node ./dist/bin/worker.js --network=mainnet
+$ npm run start-worker -- --network=mainnet
+
 ```
 
 **Docker**
+
+This automatically startups both the Http and Worker service
 
 ```sh
 $ docker-compose up
@@ -51,27 +60,6 @@ $ npm run seed-database
 
 ```sh
 $ npm test
-```
-
-### Start Http Server
-
-It can connect to either the `mainnet` or `ropsten` ethereum network
-
-```sh
-$ npm run build
-$ npm start -- --network=mainnet
-```
-
-### Start Worker Service
-
-It listens to the ethereum network for `ReserveUpdated` Aave events and stores in the database
-
-It can listen to either the `mainnet` or `ropsten` ethereum network
-
-```sh
-$ npm run build
-$ npm run start-worker -- -network=mainnet
-
 ```
 
 ## Routes
