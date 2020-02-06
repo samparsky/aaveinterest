@@ -1,6 +1,5 @@
 # aaveinterest
-A simple http api to get Aave interest rates from the blockchain
-It updates the reserves list every hour from the blockchain, this is to prevent
+A simple http api to get Aave interest rates from the blockchain.
 
 ## Dependencies
 
@@ -13,7 +12,7 @@ It updates the reserves list every hour from the blockchain, this is to prevent
 
 There are two services:
 
-- Http Api web application
+- API
 
 - Worker  (listens to the ethereum network for events)
 
@@ -65,6 +64,9 @@ $ npm test
 ## Routes
 
 ### Get Reserves List
+
+The reserves list is updated every hour from the blockchain, this is to prevent having 
+to make a expensive blockchain network call on every request.
 
 #### *URL*  
 
