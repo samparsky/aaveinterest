@@ -20,7 +20,7 @@ export default class AaveContract {
 
     async getReserves() : Promise<ReservesList> {
         if(!this.lendingPoolContract) throw new Error("please initialize network")
-        if(!this.reservesList.data) throw new Error("please initialize reserves")
+        if(!this.reservesList.data.length) throw new Error("please initialize reserves")
         if((this.reservesList.updatedAt.getTime() - (new Date().getTime())) / 3600*1000 > 1 ) {
             // update the reserves list
             // every hour
