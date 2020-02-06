@@ -86,13 +86,13 @@ Returns the rates for the last 24 hours by default
 
 #### *URL* 
 
-/deposit/:reserve/:rate?
+/deposit/:reserve/:mode?
 
 #### *Route Params*
 
 reserve: Reserve address (e.g. 0x6B175474E89094C44Da98b954EedeAC495271d0F)
 
-rate (optional): Get weighted average rate for the options ['week', 'month', 'all-time']
+mode (optional): Get weighted average rate for the options ['week', 'month', 'all-time']
 
 #### *Response*
 
@@ -109,15 +109,17 @@ rate (optional): Get weighted average rate for the options ['week', 'month', 'al
 
 ### Get Borrow Rates
 
+Returns the rates for the last 24 hours by default
+
 #### *URL* 
 
-/borrow/:reserve/:rate?
+/borrow/:reserve/:mode?
 
 #### *Route Params*
 
 reserve: Reserve address (e.g. 0x6B175474E89094C44Da98b954EedeAC495271d0F)
 
-rate (optional) : rate ['week', 'month', 'all-time']
+mode (optional): Get weighted average rate for the options ['week', 'month', 'all-time']
 
 #### *Query Params*
 

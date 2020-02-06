@@ -32,8 +32,8 @@ export default class Reserves {
         const rate = this.isDepositRoute(req) ? 'liquidityRate' : req.query.borrowRate ? `${req.query.borrowRate}BorrowRate` : 'stableBorrowRate'
     
         if(req.params.slug) query = { reserve: req.params.slug }
-        if(req.params.rate) {
-            timeframe = this.getTimeframe(req.params.rate)
+        if(req.params.mode) {
+            timeframe = this.getTimeframe(req.params.mode)
             if (timeframe.period) {
                 query = { ...query, created: { $gt: new Date(Date.now() - timeframe.period) }}
             }

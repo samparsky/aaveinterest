@@ -31,8 +31,8 @@ async function initialize(){
 
     app.use(bodyParser.json())
     app.get('/', reservesRoute.reservesList)
-    app.get('/deposit/:slug/:rate?', reservesRoute.reserves)
-    app.get('/borrow/:slug/:rate?', reservesRoute.reserves)
+    app.get('/deposit/:slug/:mode?', reservesRoute.reserves)
+    app.get('/borrow/:slug/:mode?', reservesRoute.reserves)
 }
 
 initialize()

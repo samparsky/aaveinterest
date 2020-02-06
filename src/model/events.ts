@@ -2,6 +2,18 @@ import * as mongo from 'mongodb'
 import BigNumber from 'bignumber.js'
 import { ReserveEvent } from '../types'
 
+interface EventsSchema {
+    _id ?: string,
+    reserve: string,
+    liquidityRate: number,
+    stableBorrowRate: number,
+    variableBorrowRate: number,
+    variableBorrowIndex: string,
+    liquidityIndex: string,
+    created: Date,
+    duration: number
+}
+
 export default class EventsModel {
     collection: mongo.Collection
 
@@ -9,7 +21,7 @@ export default class EventsModel {
         this.collection = db.collection('events')
     }
 
-    getEvent = async(reserve: string) : Promise<any> => {
+    getEvent = async(reserve: string) : Promise<EventsSchema | null> => {
         const result = await this.collection.find({ reserve }).sort({ created: 1 }).limit(1).toArray()
         return result[0]
     }
@@ -27,7 +39,7 @@ export default class EventsModel {
         variableBorrowIndex
     } : ReserveEvent) : Promise<void> => {
 
-        const event = {
+        const event: EventsSchema = {
             reserve,
             liquidityRate: new BigNumber(liquidityRate.toString()).div(new BigNumber(10).pow(27)).multipliedBy(100).toNumber(),
             stableBorrowRate: new BigNumber(stableBorrowRate.toString()).div(new BigNumber(10).pow(27)).multipliedBy(100).toNumber(),
