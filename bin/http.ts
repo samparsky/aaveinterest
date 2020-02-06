@@ -21,7 +21,7 @@ const contractAddress = contractAdresses[argv.network].LendingPool
 
 async function initialize(){
     await connect()
-    
+
     const contract = new AaveContract(argv.network, contractAddress)
     await contract.initReserves()
     const model = new EventsModel(getMongo())
@@ -31,10 +31,8 @@ async function initialize(){
 
     app.use(bodyParser.json())
     app.get('/', reservesRoute.reservesList)
-    app.get('/deposit/:slug', reservesRoute.reserves)
-    app.get('/deposit/:slug/:rate', reservesRoute.reserves)
-    app.get('/borrow/:slug', reservesRoute.reserves)
-    app.get('/borrow/:slug/:rate', reservesRoute.reserves)  
+    app.get('/deposit/:slug/:rate?', reservesRoute.reserves)
+    app.get('/borrow/:slug/:rate?', reservesRoute.reserves)
 }
 
 initialize()
