@@ -110,7 +110,7 @@ export default class EventsModel {
                     }
                 },
                 { $limit: 100 },
-                { $project: { value: '$value', time: '$_id', _id: 0 } }
+                { $project: { [rate]: '$value', time: '$_id', _id: 0 } }
             ]
         }
     

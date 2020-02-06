@@ -1,0 +1,31 @@
+version: "3"
+
+services: 
+  app:
+    container_name: app
+    restart: always
+    build: .
+    environment: 
+      - PORT=8005
+    ports: 
+      - "8005:8005"
+    links:
+      - mongo
+  worker:
+    container_name: worker
+    command: node bin/worker.js --network=mainnet
+    restart: always
+    build: .
+    environment: 
+      - PORT=8005
+    ports: 
+      - "8005:8005"
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    image : mongo
+    volumes: 
+      - ./data:/data/db
+    ports: 
+      - "27017:27017"  
