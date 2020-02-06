@@ -106,3 +106,22 @@ borrowRate: ['stable', 'variable']
     ]
 }
 ```
+
+# Running locally
+
+### Sample data
+
+There is a sample Mongodb dump data in the `./data` directory. It can be imported to the 
+local mongodb server
+
+```sh
+$ cd ./data
+$ mongorestore
+```
+
+There is should now be a collection of sample 208 documents in your local database that you can
+test against
+
+# LICENSE
+
+MIT

@@ -7,26 +7,26 @@ services:
     build: .
     environment: 
       - PORT=8005
+      - NETWORK=mainnet
+      - DB_MONGO_URL=mongodb://mongodb:27017
     ports: 
       - "8005:8005"
-    links:
-      - mongo
+    depends_on:
+      - mongodb
   worker:
     container_name: worker
-    command: node bin/worker.js --network=${NETWORK}
+    command: node bin/worker.js --network=mainnet
     restart: always
     build: .
     environment: 
-      - PORT=8005
       - NETWORK=mainnet
-    ports: 
-      - "8005:8005"
-    links:
-      - mongo
-  mongo:
-    container_name: mongo
+      - DB_MONGO_URL=mongodb://mongodb:27017
+    depends_on:
+      - mongodb
+  mongodb:
+    container_name: mongodb
     image : mongo
     volumes: 
-      - ./data:/data/db
+      - ./mongodb:/data/db
     ports: 
-      - "27017:27017"  
+      - "27017:27017"

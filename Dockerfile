@@ -12,6 +12,7 @@ RUN npm run build
 # This build takes the production build from staging build
 #
 FROM node:12.14.1-alpine3.9
+ENV NETWORK=mainnet
 WORKDIR /usr/src/app
 COPY package.json ./
 RUN npm install --production

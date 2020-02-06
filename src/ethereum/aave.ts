@@ -1,6 +1,6 @@
 import lendingPoolAbi from '../../aave-protocol/abi/LendingPoolCore.json'
 import { ethers } from "ethers"
-import { ReservesList } from '../types'
+import { ReservesList, ReserveEvent } from '../types'
 import logger from '../logger'
 
 export default class AaveContract {
@@ -30,12 +30,12 @@ export default class AaveContract {
         return this.reservesList
     }
 
-    async listen (processorFn: ({}) => Promise<void>) {
+    async listen (processorFn: (data: ReserveEvent) => Promise<void>) {
         if(!this.lendingPoolContract) throw new Error("please initialize network first")
         this.lendingPoolContract.on("ReserveUpdated", (reserve, liquidityRate, stableBorrowRate, variableBorrowRate, liquidityIndex, variableBorrowIndex, event) => {
             processorFn({reserve, liquidityRate, stableBorrowRate, variableBorrowRate, liquidityIndex, variableBorrowIndex})
             .then(function() {
-                logger('ethereum').info(`Finsished processing event for block ${event.blockNumber}`)
+                logger('ethereum').info(`Finished processing event for block ${event.blockNumber}`)
             })
         })
     }
