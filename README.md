@@ -7,7 +7,7 @@ There are two services:
 
 - Http Api web application
 
-- Worker  (listens to the ethereum network for updates)
+- Worker  (listens to the ethereum network for events)
 
 
 ### Start Http Server
