@@ -11,13 +11,11 @@ export default class EventsModel {
 
     getEvent = async(reserve: string) : Promise<any> => {
         const result = await this.collection.find({ reserve }).sort({ created: 1 }).limit(1).toArray()
-        console.log({ result })
         return result[0]
     }
 
     updateEventDuration = async(id: string, duration: any): Promise<any> => {
-       const update = await this.collection.updateOne({ _id: id }, { $set: { duration }})
-       console.log({ update })
+       await this.collection.updateOne({ _id: id }, { $set: { duration }})
     }
 
     storeEvents = async ({
@@ -27,7 +25,7 @@ export default class EventsModel {
         variableBorrowRate,
         liquidityIndex,
         variableBorrowIndex
-    } : ReserveEvent) : Promise<any> => {
+    } : ReserveEvent) : Promise<void> => {
 
         const event = {
             reserve,
@@ -43,24 +41,13 @@ export default class EventsModel {
         const previousUpdate = await this.getEvent(reserve)
         if(previousUpdate) {
             const duration = (new Date().getTime() - previousUpdate.created.getTime()) / 36e5;
-            // update the previous insert with the duration
             await this.updateEventDuration(previousUpdate._id, duration)
         }
 
-        // get previous reserve rate created
-        // calculate the difference to the current one
-        // store the difference
-        // if it doesn't exist return 1
-        // on new event we update the previous time difference too
-
-        // get the previous
-    
-       const result = await this.collection.insertOne(event)
-       console.log({ result })
-       return result
+       await this.collection.insertOne(event)
     }
 
-    aggregateReserves = async (query: any, projection: any, rate: string, timeframe: any) : Promise<any> => {
+    aggregateReserves = async (query: object, projection: object, rate: string, timeframe: {interval: number}) : Promise<any> => {
         let pipeline: any = [
             { '$match': query },
         ]
@@ -91,15 +78,9 @@ export default class EventsModel {
                 { $project: { [rate]: '$value', time: '$_id', _id: 0 } }
             ]
         }
-    
-        console.log({ pipeline })
-        console.log(JSON.stringify(pipeline))
 
-        const data = await this.collection
+        return await this.collection
             .aggregate([...pipeline])
-            .toArray()
-        
-        console.log(data)
-        return data
+            .toArray()        
     }
 }

@@ -1,7 +1,8 @@
 import yargs from 'yargs'
 import AaveContract from '../src/ethereum/aave'
 import EventsModel from '../src/model/events'
-import {connect, getMongo} from '../src/db/mongo'
+import { connect, getMongo } from '../src/db/mongo'
+import logger from '../src/logger'
 
 const contractAdresses = require('../src/resources/address.json')
 
@@ -16,16 +17,15 @@ const contractAddress = contractAdresses[argv.network].LendingPool
 async function initialize(){
     // connect to mongodb database
     await connect();
+ 
     let contract = new AaveContract(argv.network, contractAddress)
     let model = new EventsModel(getMongo())
 
     await contract.listen(model.storeEvents)
-    console.log("finishsed")
 }
-
 
 initialize()
 .then(function(){
-    console.log(`exiting worker`)
+    logger('woker').info("exiting worker")
     process.exit(0)
 })

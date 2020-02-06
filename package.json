@@ -11,6 +11,7 @@
     "ethers": "^4.0.44",
     "express": "^4.17.1",
     "mongodb": "^3.5.2",
+    "winston": "^3.2.1",
     "yargs": "^15.1.0"
   },
   "devDependencies": {

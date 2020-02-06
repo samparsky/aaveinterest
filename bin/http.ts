@@ -21,6 +21,7 @@ const contractAddress = contractAdresses[argv.network].LendingPool
 
 async function initialize(){
     await connect()
+    
     const contract = new AaveContract(argv.network, contractAddress)
     await contract.initReserves()
     const model = new EventsModel(getMongo())
