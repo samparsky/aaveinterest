@@ -17,11 +17,31 @@ There are two services:
 
 - Worker  (listens to the ethereum network for events)
 
+**Manually** 
+
+Start http service
+
+```sh
+$ npm run build
+$ node ./dist/bin/http.js --network=mainnet
+```
+
+Start worker service
+
+```sh
+$ npm run build
+$ node ./dist/bin/worker.js --network=mainnet
+```
+
+**Docker**
+
+```sh
+$ docker-compose up
+```
+
 ## Run Tests
 
-For the tests to pass there **MUST** be data in the database
-If there is no data in the database you can seed the database with external data for 
-tests to pass with
+For the tests to pass you **MUST** seed the database
 
 ```sh
 $ npm run seed-database
@@ -31,7 +51,7 @@ $ npm run seed-database
 
 ```sh
 $ npm test
-``
+```
 
 ### Start Http Server
 

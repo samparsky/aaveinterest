@@ -1,2 +1,4 @@
-mongo aaveInterest ./test/prep-db/mongo.js >/dev/null
-npx ts-node ./test/integration.ts
+#/usr/bin/env bash
+
+mongo aaveInterestTest ./test/mongo.js >/dev/null
+exit $?

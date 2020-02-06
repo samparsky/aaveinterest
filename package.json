@@ -34,7 +34,7 @@
     "prestart": "npm run build",
     "start": "node ./dist/bin/http.js",
     "start-worker": "node ./dist/bin/worker.js",
-    "seed-database": "./setup.sh",
+    "seed-database": "./test/setup.sh",
     "test": "npx ts-node ./test/integration.ts"
   },
   "repository": {
