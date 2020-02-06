@@ -2,6 +2,12 @@
 A simple http api to get Aave interest rates from the blockchain
 It updates the reserves list every hour from the blockchain, this is to prevent
 
+## Dependencies
+
+- Node >= v12
+
+- Mongodb >= 4.2
+
 
 ## Run Application
 
@@ -11,6 +17,21 @@ There are two services:
 
 - Worker  (listens to the ethereum network for events)
 
+## Run Tests
+
+For the tests to pass there **MUST** be data in the database
+If there is no data in the database you can seed the database with external data for 
+tests to pass with
+
+```sh
+$ npm run seed-database
+```
+
+**Run tests**
+
+```sh
+$ npm test
+``
 
 ### Start Http Server
 

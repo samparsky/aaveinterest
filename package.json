@@ -32,8 +32,9 @@
   "scripts": {
     "build": "npx tsc",
     "prestart": "npm run build",
-    "start": "node ./bin/http.js",
-    "start-worker": "node ./bin/worker.js",
+    "start": "node ./dist/bin/http.js",
+    "start-worker": "node ./dist/bin/worker.js",
+    "seed-database": "./setup.sh",
     "test": "npx ts-node ./test/integration.ts"
   },
   "repository": {
