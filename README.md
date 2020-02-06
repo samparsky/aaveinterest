@@ -1,6 +1,35 @@
 # aaveinterest
 A simple http api to get Aave interest rates from the blockchain
 
+## Run Application
+
+There are two services:
+
+- Http Api web application
+
+- Worker  (listens to the ethereum network for updates)
+
+
+### Start Http Server
+
+It can connect to either the `mainnet` or `ropsten` ethereum network
+
+```sh
+$ npm run build
+$ npm start -- --network=mainnet
+```
+
+### Start Worker Service
+
+It listens to the ethereum network for `ReserveUpdated` Aave events and stores in the database
+
+It can listen to either the `mainnet` or `ropsten` ethereum network
+
+```sh
+$ npm run build
+$ npm run start-worker -- -network=mainnet
+
+```
 
 ## Routes
 
