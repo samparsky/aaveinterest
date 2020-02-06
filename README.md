@@ -1,5 +1,7 @@
 # aaveinterest
 A simple http api to get Aave interest rates from the blockchain
+It updates the reserves list every hour from the blockchain, this is to prevent
+
 
 ## Run Application
 
@@ -51,6 +53,8 @@ $ npm run start-worker -- -network=mainnet
 
 ### Get Deposit Rates
 
+Returns the rates for the last 24 hours by default
+
 #### *URL* 
 
 /deposit/:reserve/:rate?
@@ -59,7 +63,7 @@ $ npm run start-worker -- -network=mainnet
 
 reserve: Reserve address (e.g. 0x6B175474E89094C44Da98b954EedeAC495271d0F)
 
-rate (optional) : rate ['week', 'month', 'all-time']
+rate (optional): Get weighted average rate for the options ['week', 'month', 'all-time']
 
 #### *Response*
 

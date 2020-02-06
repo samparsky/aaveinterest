@@ -5,6 +5,8 @@ import AaveContract from '../src/ethereum/aave'
 import EventsModel from '../src/model/events'
 import {connect, getMongo} from '../src/db/mongo'
 import ReservesRoute from '../src/routes/reserves'
+import logger from '../src/logger'
+
 
 const contractAdresses = require('../src/resources/address.json')
 
@@ -25,8 +27,6 @@ async function initialize(){
     const contract = new AaveContract(argv.network, contractAddress)
     await contract.initReserves()
     const model = new EventsModel(getMongo())
-    // adds contract events listener
-    // await contract.listen(model.storeEvents)
     const reservesRoute = new ReservesRoute(model, contract)
 
     app.use(bodyParser.json())
@@ -36,5 +36,5 @@ async function initialize(){
 }
 
 initialize()
-.then(() => app.listen(port, () => console.log(`listening on port ${port}!`)))
+.then(() => app.listen(port, () => logger('http').info(`listening on port ${port}!`)))
 

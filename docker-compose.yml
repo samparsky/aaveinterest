@@ -13,11 +13,12 @@ services:
       - mongo
   worker:
     container_name: worker
-    command: node bin/worker.js --network=mainnet
+    command: node bin/worker.js --network=${NETWORK}
     restart: always
     build: .
     environment: 
       - PORT=8005
+      - NETWORK=mainnet
     ports: 
       - "8005:8005"
     links:

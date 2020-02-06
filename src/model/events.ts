@@ -47,7 +47,7 @@ export default class EventsModel {
        await this.collection.insertOne(event)
     }
 
-    aggregateReserves = async (query: object, projection: object, rate: string, timeframe: {interval: number}) : Promise<any> => {
+    aggregateReserves = async (query: object, projection: object, rate: string, timeframe: {interval: number}) : Promise<Array<any>> => {
         let pipeline: any = [
             { '$match': query },
         ]
@@ -64,8 +64,7 @@ export default class EventsModel {
                         value: { $divide: [ { $multiply : [`$${rate}`, '$duration'] }, timeframe.interval ] },
                         key: {
                             $subtract: [ { "$toLong": "$created" }, { $mod: [ { "$toLong": "$created" }, timeframe.interval] }]
-                        },
-                        
+                        },   
                     }
                 },
                 {
