@@ -6,9 +6,11 @@ A simple http api to get Aave interest rates from the blockchain
 
 ### Get Reserves List
 
-*URL*  /
+#### *URL*  
 
-*Response*
+/
+
+#### *Response*
 
 ```js
 {
@@ -20,14 +22,17 @@ A simple http api to get Aave interest rates from the blockchain
 
 ### Get Deposit Rates
 
-*URL* /deposit/:reserve/:rate?
+#### *URL* 
 
-*Route Params*
+/deposit/:reserve/:rate?
+
+#### *Route Params*
 
 reserve: Reserve address (e.g. 0x6B175474E89094C44Da98b954EedeAC495271d0F)
+
 rate (optional) : rate ['week', 'month', 'all-time']
 
-*Response*
+#### *Response*
 
 ```js
 {
@@ -42,18 +47,21 @@ rate (optional) : rate ['week', 'month', 'all-time']
 
 ### Get Borrow Rates
 
-*URL* /borrow/:reserve/:rate?
+#### *URL* 
 
-*Route Params*
+/borrow/:reserve/:rate?
+
+#### *Route Params*
 
 reserve: Reserve address (e.g. 0x6B175474E89094C44Da98b954EedeAC495271d0F)
+
 rate (optional) : rate ['week', 'month', 'all-time']
 
-*Query Params*
+#### *Query Params*
 
 borrowRate: ['stable', 'variable']
 
-*Response*
+#### *Response*
 
 ```js
 {
