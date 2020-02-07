@@ -50,7 +50,7 @@ export default class AaveContract {
                 this.requestDelay += 1;
                 // add a request rate limit due to Infura request rate limit
                 // can be reduced if a dedicated project is setup
-                this.delay(this.network === 'mainnet' ? 5000 + this.requestDelay: 0)
+                this.delay(this.network === 'mainnet' ? 3000 + this.requestDelay: 0)
                 .then(() => event.getBlock())
                 .then((block: any) => block.timestamp)
                 .then((timestamp: number) => {
@@ -62,7 +62,7 @@ export default class AaveContract {
                             variableBorrowRate, 
                             liquidityIndex, 
                             variableBorrowIndex, 
-                            timestamp, 
+                            timestamp,
                             blockNumber: event.blockNumber
                         }
                     )
