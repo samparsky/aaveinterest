@@ -36,12 +36,11 @@ export default class AaveContract {
     
     delay = async (interval: number) => new Promise(resolve => setTimeout(resolve, interval))
 
-    async listen (processorFn: (data: ReserveEvent) => Promise<void>, blockHeight: number | null) {
+    async listen (processorFn: (data: ReserveEvent) => Promise<void>, blockHeight: number | null, workers: number) {
         if(!this.lendingPoolContract) throw new Error("please initialize network first")
         this.provider.resetEventsBlock(blockHeight) 
         // use 2 workers for mainnet due to infura request rate limit
         // can be improved if a dedicated project is setup
-        const workers = this.network == 'mainnet' ? 3 : process.env.NUM_WORKERS || 10
         const logId = `ethereum:${this.network}`
         const queue = require('fastq')(
             (
@@ -55,7 +54,18 @@ export default class AaveContract {
                 .then(() => event.getBlock())
                 .then((block: any) => block.timestamp)
                 .then((timestamp: number) => {
-                    processorFn({reserve, liquidityRate, stableBorrowRate, variableBorrowRate, liquidityIndex, variableBorrowIndex, timestamp, blockNumber: event.blockNumber})
+                    processorFn(
+                        {
+                            reserve, 
+                            liquidityRate, 
+                            stableBorrowRate, 
+                            variableBorrowRate, 
+                            liquidityIndex, 
+                            variableBorrowIndex, 
+                            timestamp, 
+                            blockNumber: event.blockNumber
+                        }
+                    )
                     .then(function() {
                         logger(logId).info(`Finished processing event for block ${event.blockNumber} and reserve ${reserve}`)
                         cb()
@@ -65,7 +75,9 @@ export default class AaveContract {
             workers
         )
 
-        this.lendingPoolContract.on("ReserveUpdated", (reserve, liquidityRate, stableBorrowRate, variableBorrowRate, liquidityIndex, variableBorrowIndex, event) => {
+        this.lendingPoolContract.on(
+            "ReserveUpdated", 
+            (reserve, liquidityRate, stableBorrowRate, variableBorrowRate, liquidityIndex, variableBorrowIndex, event) => {
             queue.push({reserve, liquidityRate, stableBorrowRate, variableBorrowRate, liquidityIndex, variableBorrowIndex, event}, () => {})
         })
     }

@@ -22,9 +22,9 @@ async function initialize(){
     const model = new EventsModel(getMongo())
     // retrieves last processed block height
     const blockHeight = await model.getLastBlockHeight() || createdBlockHeight
-    const workers = argv.network == 'mainnet' ? 2 : process.env.NUM_WORKERS || 10
+    const workers = argv.network == 'mainnet' ? 3 : parseInt(process.env.NUM_WORKERS, 10) || 10
     logger('worker').info(`processing events from block ${blockHeight} and with ${workers} workers`)
-    await contract.listen(model.storeEvents, blockHeight)
+    await contract.listen(model.storeEvents, blockHeight, workers)
 }
 
 initialize()
