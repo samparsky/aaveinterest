@@ -16,7 +16,7 @@ There are two services:
 
 - Worker  (listens to the ethereum network for events) 
 
-The worker uses an in memory queue and a configurable number of workers (default is 10)
+The worker uses an in memory queue and a configurable number of workers (default is 10 for testnet and 3 for mainnet)
 to process the events in the queue. The configuration of the number of workers
 should be based on number of requests your Ethereum node is able to process (Infura was ~1-2 while testing)
 else you would have request timeouts
