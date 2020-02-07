@@ -35,7 +35,7 @@ export default class AaveContract {
         this.lendingPoolContract.on("ReserveUpdated", (reserve, liquidityRate, stableBorrowRate, variableBorrowRate, liquidityIndex, variableBorrowIndex, event) => {
             processorFn({reserve, liquidityRate, stableBorrowRate, variableBorrowRate, liquidityIndex, variableBorrowIndex})
             .then(function() {
-                logger('ethereum').info(`Finished processing event for block ${event.blockNumber}`)
+                logger('ethereum').info(`Finished processing event for block ${event.blockNumber} and reserve ${reserve}`)
             })
         })
     }
