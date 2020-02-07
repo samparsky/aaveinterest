@@ -31,9 +31,8 @@ export default class AaveContract {
         return this.reservesList
     }
 
-    async listen (processorFn: (data: ReserveEvent) => Promise<void>, lastBlockHeight: number | null) {
+    async listen (processorFn: (data: ReserveEvent) => Promise<void>, blockHeight: number | null) {
         if(!this.lendingPoolContract) throw new Error("please initialize network first")
-        const blockHeight = lastBlockHeight || 9241008 // 9241008 this is the block number LendingPoolCore was created
         this.provider.resetEventsBlock(blockHeight) 
 
         const queue = require('fastq')(
@@ -53,7 +52,7 @@ export default class AaveContract {
                 })
             }, 
             process.env.NUM_WORKERS || 10
-        );
+        )
 
         this.lendingPoolContract.on("ReserveUpdated", (reserve, liquidityRate, stableBorrowRate, variableBorrowRate, liquidityIndex, variableBorrowIndex, event) => {
             queue.push({reserve, liquidityRate, stableBorrowRate, variableBorrowRate, liquidityIndex, variableBorrowIndex, event}, () => {})

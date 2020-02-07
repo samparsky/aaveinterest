@@ -23,7 +23,7 @@ export default class EventsModel {
     }
 
     getEvent = async(reserve: string) : Promise<EventsSchema | null> => {
-        const result = await this.collection.find({ reserve }).sort({ created: 1 }).limit(1).toArray()
+        const result = await this.collection.find({ reserve }).sort({ created: -1 }).limit(1).toArray()
         return result[0]
     }
 
@@ -32,7 +32,7 @@ export default class EventsModel {
     }
 
     getLastBlockHeight = async(): Promise<number | null> => {
-        const result: Array<EventsSchema> = await this.collection.find({}).sort({ created: 1 }).limit(1).toArray()
+        const result: Array<EventsSchema> = await this.collection.find({}).sort({ created: -1 }).limit(1).toArray()
         return result.length ? result[0].blockNumber : null
     }
 
@@ -94,8 +94,13 @@ export default class EventsModel {
                         value: { $sum: '$value' }
                     }
                 },
-                { $limit: 100 },
+                { $sort: { '_id': -1 } },
                 { $project: { [rate]: '$value', time: '$_id', _id: 0 } }
+            ]
+        } else {
+            pipeline = [
+                ...pipeline,
+                { $sort: { 'created': -1 } },
             ]
         }
 

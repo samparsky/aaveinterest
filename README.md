@@ -18,8 +18,8 @@ There are two services:
 
 The worker uses an in memory queue and a configurable number of workers (default is 10)
 to process the events in the queue. The configuration of the number of workers
-should be based on number of requests the Ethereum node is able to process (Infura is ~10)
-else there might be timeouts
+should be based on number of requests your Ethereum node is able to process (Infura was ~10 while testing)
+else you would have request timeouts
 
 **Manual** 
 
