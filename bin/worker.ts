@@ -18,14 +18,16 @@ async function initialize(){
     // connect to mongodb database
     await connect();
  
-    let contract = new AaveContract(argv.network, contractAddress)
-    let model = new EventsModel(getMongo())
+    const contract = new AaveContract(argv.network, contractAddress)
+    const model = new EventsModel(getMongo())
+    // retrieves last processed block height
+    const blockHeight = await model.getLastBlockHeight()
 
-    await contract.listen(model.storeEvents)
+    await contract.listen(model.storeEvents, blockHeight)
 }
 
 initialize()
 .then(function(){
-    logger('woker').info("starting worker")
+    logger('worker').info("starting worker")
     process.stdin.resume() // this is to prevent the script from exiting
 })

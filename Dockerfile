@@ -12,10 +12,9 @@ RUN npm run build
 # This build takes the production build from staging build
 #
 FROM node:12.14.1-alpine3.9
-ENV NETWORK=mainnet
 WORKDIR /usr/src/app
 COPY package.json ./
 RUN npm install --production
 COPY --from=appbuild /usr/src/app/dist .
 EXPOSE 8005
-CMD node ./bin/http.js --network=mainnet
+CMD node ./bin/http.js --network=${NETWORK:-mainnet}

@@ -6,10 +6,11 @@ import logger from '../logger'
 export default class AaveContract {
     lendingPoolContract: ethers.Contract
     reservesList: ReservesList = { data: [], updatedAt: new Date() }
+    provider: ethers.providers.InfuraProvider
 
     constructor(network: string, contractAddress: string){
-        const infuraProvider = new ethers.providers.InfuraProvider(network);
-        this.lendingPoolContract = new ethers.Contract(contractAddress, lendingPoolAbi, infuraProvider);
+        this.provider = new ethers.providers.InfuraProvider(network);
+        this.lendingPoolContract = new ethers.Contract(contractAddress, lendingPoolAbi, this.provider);
     }
 
     async initReserves() : Promise<void> {
@@ -30,15 +31,32 @@ export default class AaveContract {
         return this.reservesList
     }
 
-    async listen (processorFn: (data: ReserveEvent) => Promise<void>) {
+    async listen (processorFn: (data: ReserveEvent) => Promise<void>, lastBlockHeight: number | null) {
         if(!this.lendingPoolContract) throw new Error("please initialize network first")
+        const blockHeight = lastBlockHeight || 9241008 // 9241008 this is the block number LendingPoolCore was created
+        this.provider.resetEventsBlock(blockHeight) 
+
+        const queue = require('fastq')(
+            (
+                {reserve, liquidityRate, stableBorrowRate, variableBorrowRate, liquidityIndex, variableBorrowIndex, event}: any, 
+                cb: () => void
+            ) => {
+                event
+                .getBlock()
+                .then((block: any) => block.timestamp)
+                .then((timestamp: number) => {
+                    processorFn({reserve, liquidityRate, stableBorrowRate, variableBorrowRate, liquidityIndex, variableBorrowIndex, timestamp, blockNumber: event.blockNumber})
+                    .then(function() {
+                        logger('ethereum').info(`Finished processing event for block ${event.blockNumber} and reserve ${reserve}`)
+                        cb()
+                    })
+                })
+            }, 
+            process.env.NUM_WORKERS || 10
+        );
+
         this.lendingPoolContract.on("ReserveUpdated", (reserve, liquidityRate, stableBorrowRate, variableBorrowRate, liquidityIndex, variableBorrowIndex, event) => {
-            processorFn({reserve, liquidityRate, stableBorrowRate, variableBorrowRate, liquidityIndex, variableBorrowIndex})
-            .then(function() {
-                logger('ethereum').info(`Finished processing event for block ${event.blockNumber} and reserve ${reserve}`)
-            })
+            queue.push({reserve, liquidityRate, stableBorrowRate, variableBorrowRate, liquidityIndex, variableBorrowIndex, event}, () => {})
         })
     }
-
-
 }

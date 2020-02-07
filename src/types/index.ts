@@ -10,5 +10,7 @@ export interface ReserveEvent {
     stableBorrowRate: utils.BigNumber, 
     variableBorrowRate: utils.BigNumber,
     liquidityIndex: utils.BigNumber,
-    variableBorrowIndex: utils.BigNumber
+    variableBorrowIndex: utils.BigNumber,
+    timestamp: number,
+    blockNumber: number,
 }

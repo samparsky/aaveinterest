@@ -11,7 +11,8 @@ interface EventsSchema {
     variableBorrowIndex: string,
     liquidityIndex: string,
     created: Date,
-    duration: number
+    duration: number,
+    blockNumber: number,
 }
 
 export default class EventsModel {
@@ -30,13 +31,20 @@ export default class EventsModel {
        await this.collection.updateOne({ _id: id }, { $set: { duration }})
     }
 
+    getLastBlockHeight = async(): Promise<number | null> => {
+        const result: Array<EventsSchema> = await this.collection.find({}).sort({ created: 1 }).limit(1).toArray()
+        return result.length ? result[0].blockNumber : null
+    }
+
     storeEvents = async ({
         reserve,
         liquidityRate, 
         stableBorrowRate, 
         variableBorrowRate,
         liquidityIndex,
-        variableBorrowIndex
+        variableBorrowIndex,
+        timestamp,
+        blockNumber
     } : ReserveEvent) : Promise<void> => {
 
         const event: EventsSchema = {
@@ -46,8 +54,9 @@ export default class EventsModel {
             variableBorrowRate: new BigNumber(variableBorrowRate.toString()).div(new BigNumber(10).pow(27)).multipliedBy(100).toNumber(),
             variableBorrowIndex: variableBorrowIndex.toString(),
             liquidityIndex: liquidityIndex.toString(),
-            created: new Date(),
-            duration: 1.0
+            created: new Date(timestamp * 1000),
+            duration: 1.0,
+            blockNumber
         }
 
         const previousUpdate = await this.getEvent(reserve)
