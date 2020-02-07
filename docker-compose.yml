@@ -14,7 +14,7 @@ services:
       - mongodb
   worker:
     container_name: worker
-    command: node bin/worker.js --network=${NETWORK:-mainnet}
+    command: node bin/worker.js --network=${NETWORK:-ropsten}
     restart: always
     build: .
     environment:
@@ -29,8 +29,3 @@ services:
       - ./mongodb:/data/db
     ports:
       - "27017:27017"
-    healthcheck:
-      test: echo 'db.stats().ok' | mongo localhost:27017/test --quiet
-      interval: 5s
-      timeout: 5s
-      retries: 12

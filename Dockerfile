@@ -17,4 +17,5 @@ COPY package.json ./
 RUN npm install --production
 COPY --from=appbuild /usr/src/app/dist .
 EXPOSE 8005
-CMD node ./bin/http.js --network=${NETWORK:-mainnet}
+
+CMD node ./bin/http.js --network=${NETWORK:-ropsten}
