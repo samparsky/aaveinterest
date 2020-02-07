@@ -1,4 +1,4 @@
-version: "3"
+version: "3.4"
 
 services: 
   app:
@@ -25,7 +25,12 @@ services:
   mongodb:
     container_name: mongodb
     image : mongo
-    volumes: 
+    volumes:
       - ./mongodb:/data/db
-    ports: 
+    ports:
       - "27017:27017"
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27017/test --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 12

@@ -1,6 +1,7 @@
 import EventsModel from '../model/events'
 import AaveContract from '../ethereum/aave'
 import express from 'express'
+
 export default class Reserves {
     eventsModel: EventsModel
     aaveContract: AaveContract

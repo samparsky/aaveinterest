@@ -12,7 +12,7 @@ const { argv } = yargs
     .choices('network', Object.keys(contractAdresses))
     .demandOption(['network'])
 
-const { LendingPool: contractAddress, contractCreatedBlockHeight }= contractAdresses[argv.network].LendingPool
+const { LendingPool: contractAddress, createdBlockHeight } = contractAdresses[argv.network]
 
 async function initialize(){
     // connect to mongodb database
@@ -21,8 +21,9 @@ async function initialize(){
     const contract = new AaveContract(argv.network, contractAddress)
     const model = new EventsModel(getMongo())
     // retrieves last processed block height
-    const blockHeight = await model.getLastBlockHeight() || contractCreatedBlockHeight
-    logger('worker').info(`processing events from block ${blockHeight}`)
+    const blockHeight = await model.getLastBlockHeight() || createdBlockHeight
+    const workers = argv.network == 'mainnet' ? 2 : process.env.NUM_WORKERS || 10
+    logger('worker').info(`processing events from block ${blockHeight} and with ${workers} workers`)
     await contract.listen(model.storeEvents, blockHeight)
 }
 
